@@ -17,7 +17,8 @@ dcc._js_dist[0]['external_url'] = 'https://cdn.plot.ly/plotly-basic-latest.min.j
 
 # load data
 df = pd.read_csv('meshdash_data_sample.csv')
-
+df_wifi = pd.read_csv('meshdash_data_wifi.csv')
+df_ping = pd.read_csv('meshdash_data_ping.csv')
 # create labels for dropdown menu
 labels = []
 for i in df.node_ip.unique():
@@ -25,32 +26,94 @@ for i in df.node_ip.unique():
 
 # create the main view
 app.layout = html.Div([
-    html.H1('Mesh Ping Time Delta (mins)'),
-    dcc.Dropdown(
-        id='node_ip',
-        options=labels,
-        value=labels[0]['label']
-    ),
-    dcc.Graph(id='time_delta_min')
+
+    # selector
+    dcc.Dropdown(id='node_ip', options=labels, value=labels[0]['label']),
+
+    # first plot
+    html.H1('Node Downtime (mins)'),
+    dcc.Graph(id='node_downtime_min'),
+
+    # second plot
+    html.H1('Number of Connections'),
+    dcc.Graph(id='active_connections'),
+
+    # third plot
+    html.H1('Max Ping (ms)'),
+    dcc.Graph(id='max_ping'),
+
+    # visuals ends here
 ], className="container")
 
 
 # create the graph element
-@app.callback(Output('time_delta_min', 'figure'), [Input('node_ip', 'value')])
-def update_graph(selected_dropdown_value):
-    dff = df[df['node_ip'] == selected_dropdown_value]
+@app.callback(Output('node_downtime_min', 'figure'), [Input('node_ip', 'value')])
+def node_downtime_min(selected_dropdown_value):
+    data = df[df['node_ip'] == selected_dropdown_value]
     return {
         # make changes to data here
         'data': [{
-            'x': dff.timestamp,
-            'y': dff.time_delta_min,
+            'x': data.timestamp,
+            'y': data.time_delta_min,
             # edit visuals here
             'line': {
-                'width': 3,
+                'width': 2,
                 'shape': 'linear'
             }
         }],
         # ...and here
+        'layout': {
+            'margin': {
+                'l': 30,
+                'r': 20,
+                'b': 30,
+                't': 20
+            }
+        }
+    }
+
+
+# create the graph element
+@app.callback(Output('active_connections', 'figure'), [Input('node_ip', 'value')])
+def active_connections(selected_dropdown_value):
+    data = df_wifi[df_wifi['node_ip'] == selected_dropdown_value]
+    return {
+        # make changes to data here
+        'data': [{
+            'x': data.timestamp,
+            'y': data.no_of_connections,
+            # edit visuals here
+            'line': {
+                'color': 'rgb(231,107,243)',
+                'width': .3,
+                'shape': 'linear'
+            }
+        }],
+        # ...and here
+        'layout': {
+            'margin': {
+                'l': 30,
+                'r': 20,
+                'b': 30,
+                't': 20
+            }
+        }
+    }
+
+
+@app.callback(Output('max_ping', 'figure'), [Input('node_ip', 'value')])
+def ping_delta(selected_dropdown_value):
+    data = df_ping[df_ping['node_ip'] == selected_dropdown_value]
+    return {
+        'data': [{
+            'y': data['max'],
+            'x': data.timestamp,
+            'line': {
+                'color': 'rgb(255,99,71)',
+                'width': .3,
+                'shape': 'linear'
+            }
+        }],
         'layout': {
             'margin': {
                 'l': 30,
