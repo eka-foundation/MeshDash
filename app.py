@@ -16,9 +16,9 @@ app = dash.Dash('app', server=server)
 dcc._js_dist[0]['external_url'] = 'https://cdn.plot.ly/plotly-basic-latest.min.js'
 
 # load data
-df = pd.read_csv('meshdash_data_sample.csv')
-df_wifi = pd.read_csv('meshdash_data_wifi.csv')
-df_ping = pd.read_csv('meshdash_data_ping.csv')
+df = pd.read_csv('data/meshdash_data_sample.csv')
+df_wifi = pd.read_csv('data/meshdash_data_wifi.csv')
+df_ping = pd.read_csv('data/meshdash_data_ping.csv')
 # create labels for dropdown menu
 labels = []
 for i in df.node_ip.unique():
