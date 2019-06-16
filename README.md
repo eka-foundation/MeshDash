@@ -13,9 +13,9 @@
 </p>
 
 <p align="center">
-  <a href="#what">what?</a> ?
-  <a href="#how">how?</a> ?
-  <a href="mailto:admin@eka.to">contact</a> ?
+  <a href="#what">what?</a> •
+  <a href="#how">how?</a> •
+  <a href="mailto:admin@eka.to">contact</a> •
   <a href="#learn-more">learn more</a>
 </p>
 <hr>
